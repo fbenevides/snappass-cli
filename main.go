@@ -15,7 +15,7 @@ func defineSnapUrlCommand() *cobra.Command {
 			config := &Config{BaseUrl: args[0]}
 			err := Write(config)
 			if err == nil {
-				fmt.Printf("Snappass URL: %s", config.BaseUrl)
+				fmt.Printf("• Snappass URL: %s", config.BaseUrl)
 				return nil
 			}
 
@@ -56,7 +56,7 @@ func setPasswordCommand() *cobra.Command {
 func main() {
 	rootCommand := &cobra.Command{
 		Use:   "snap",
-		Short: "snap-cli is a CLI for Snappass",
+		Short: "snap is a CLI for Snappass (https://github.com/pinterest/snappass)",
 	}
 
 	defineBaseUrlCommand := defineSnapUrlCommand()
