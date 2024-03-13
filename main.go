@@ -13,7 +13,7 @@ func defineSnapUrlCommand() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config := &Config{BaseUrl: args[0]}
-			err := Write(config)
+			err := WriteConfig(config)
 			if err == nil {
 				fmt.Printf("• Snappass URL: %s", config.BaseUrl)
 				return nil
@@ -30,7 +30,7 @@ func setPasswordCommand() *cobra.Command {
 		Short: "Sets a new password",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			config, err := Read()
+			config, err := ReadConfig()
 			if err != nil {
 				return err
 			}
@@ -42,9 +42,8 @@ func setPasswordCommand() *cobra.Command {
 			}
 
 			if response.IsSuccessful() {
-				fmt.Printf("• Link created: %s // TTL: %d\n", response.Link, response.Ttl)
 				clipboard.WriteAll(response.Link)
-				fmt.Printf("• Copied to clipboard.\n")
+				fmt.Printf("• Secret link copied to clipboard. TTL: %d\n", response.Ttl)
 				return nil
 			}
 

@@ -21,21 +21,31 @@ func check(err error) {
 	}
 }
 
-func databaseFile() string {
-	homePath, err := os.UserHomeDir()
-	check(err)
-	return fmt.Sprintf("%s/%s", homePath, DatabaseFile)
+func WriteConfig(config *Config) error {
+	databaseFile := databaseFile(DatabaseFile)
+	return write(databaseFile, config)
 }
 
-func Write(config *Config) error {
+func ReadConfig() (*Config, error) {
+	databaseFile := databaseFile(DatabaseFile)
+	return read(databaseFile)
+}
+
+func databaseFile(filename string) string {
+	homePath, err := os.UserHomeDir()
+	check(err)
+	return fmt.Sprintf("%s/%s", homePath, filename)
+}
+
+func write(filename string, config *Config) error {
 	configInJson, err := json.Marshal(config)
 	check(err)
 
-	return os.WriteFile(databaseFile(), configInJson, DefaultFilePermissions)
+	return os.WriteFile(filename, configInJson, DefaultFilePermissions)
 }
 
-func Read() (*Config, error) {
-	configInJson, err := os.ReadFile(databaseFile())
+func read(filename string) (*Config, error) {
+	configInJson, err := os.ReadFile(filename)
 	check(err)
 
 	var config = &Config{}
@@ -43,4 +53,8 @@ func Read() (*Config, error) {
 	check(err)
 
 	return config, nil
+}
+
+func clear(filename string) error {
+	return os.Remove(filename)
 }
